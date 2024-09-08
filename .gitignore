@@ -1,1 +1,6 @@
 .exercism/
+.idea/
+.config/
+
+[Bb]in/
+[Oo]bj/
