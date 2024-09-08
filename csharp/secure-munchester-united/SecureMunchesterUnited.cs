@@ -2,23 +2,16 @@ using System;
 
 public class SecurityPassMaker
 {
-    public string GetDisplayName(TeamSupport support)
-    {
-        if (support is Security && IsPrincipalSecurity(support))
+    public string GetDisplayName(TeamSupport support) =>
+        support switch
         {
-            return support.Title + " Priority Personnel";
-        }
-    
-        if (!(support is Staff))
-        {
-            return "Too Important for a Security Pass";
-        }
-
-        return support.Title;
-    }
+            Security security when IsPrincipalSecurity(security) => $"{support.Title} Priority Personnel",
+            _ when support is Staff => support.Title,
+            _ => "Too Important for a Security Pass",
+        };
 
     private bool IsPrincipalSecurity(TeamSupport support) =>
-        !(support is PoliceLiaison) && !(support is SecurityIntern) && !(support is SecurityJunior);
+        !(support is PoliceLiaison || support is SecurityIntern || support is SecurityJunior);
 }
 
 /**** Please do not alter the code below ****/
