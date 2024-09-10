@@ -13,11 +13,16 @@ public class Reactor
 
 public abstract class Cell
 {
+    public event EventHandler<int> Updated;
     public event EventHandler<int> Changed;
+    
     public abstract int Value { get; set; }
 
-    protected void OnChanged(int changedValue) =>
+    protected void OnValueChanged(int changedValue)
+    {
+        Updated?.Invoke(this, changedValue);
         Changed?.Invoke(this, changedValue);
+    }
 }
 
 public class InputCell : Cell
@@ -35,7 +40,7 @@ public class InputCell : Cell
             if (_value != value)
             {
                 _value = value;
-                OnChanged(_value);
+                OnValueChanged(_value);
             }
         }
     }
@@ -46,24 +51,39 @@ public class ComputeCell : Cell
     private readonly IEnumerable<Cell> _producers;
     private readonly Func<int[], int> _compute;
     private int _value;
-    private int producersChanged = 0;
-
+    private bool _valueChanged;
+    
     public ComputeCell(IEnumerable<Cell> producers, Func<int[], int> compute)
     {
         _producers = producers;
         _compute = compute;
         _value = ComputeValue();
-        
-        producers.Last().Changed += (_, _) =>
+
+        foreach (var producer in _producers)
         {
-            var newValue = ComputeValue();
-                
-            if (newValue != _value)
-            {
-                _value = newValue;
-                OnChanged(_value);
-            }
-        };
+            producer.Updated += (_, _) => OnUpdated();
+            producer.Changed += (_, _) => OnChanged();
+        }
+    }
+
+    private void OnUpdated()
+    {
+        var newValue = ComputeValue();
+
+        if (_value != newValue)
+        {
+            _value = newValue;
+            _valueChanged = true;
+        }
+    }
+
+    private void OnChanged()
+    {
+        if (_valueChanged)
+        {
+            OnValueChanged(_value);
+            _valueChanged = false;
+        }
     }
 
     private int ComputeValue() =>
