@@ -37,11 +37,10 @@ public class InputCell : Cell
         get => _value;
         set
         {
-            if (_value != value)
-            {
-                _value = value;
-                OnValueChanged(_value);
-            }
+            if (_value == value) return;
+                
+            _value = value;
+            OnValueChanged(_value);
         }
     }
 }
@@ -70,20 +69,18 @@ public class ComputeCell : Cell
     {
         var newValue = ComputeValue();
 
-        if (_value != newValue)
-        {
-            _value = newValue;
-            _valueChanged = true;
-        }
+        if (_value == newValue) return;
+        
+        _value = newValue;
+        _valueChanged = true;
     }
 
     private void OnChanged()
     {
-        if (_valueChanged)
-        {
-            OnValueChanged(_value);
-            _valueChanged = false;
-        }
+        if (!_valueChanged) return;
+        
+        OnValueChanged(_value);
+        _valueChanged = false;
     }
 
     private int ComputeValue() =>
