@@ -6,17 +6,15 @@ public class GradeSchool
 {
     private readonly Dictionary<int, List<string>> studentsByGrade = new();
     
-    public void Add(string student, int grade)
+    public bool Add(string student, int grade)
     {
-        if (studentsByGrade.ContainsKey(grade))
-        {
-            studentsByGrade[grade].Add(student);
-        }
-        else
-        {
-            var studentList = new List<string>() { student };
-            studentsByGrade[grade] = studentList;
-        }
+        if (studentsByGrade.SelectMany(kvp => kvp.Value).Contains(student))
+            return false;
+        
+        studentsByGrade.TryAdd(grade, new List<string>());
+        studentsByGrade[grade].Add(student);
+        
+        return true;
     }
 
     public IEnumerable<string> Roster() =>
@@ -25,7 +23,7 @@ public class GradeSchool
             .SelectMany(kvp => kvp.Value.OrderBy(student => student));
 
     public IEnumerable<string> Grade(int grade) =>
-        studentsByGrade.ContainsKey(grade) ?
-            studentsByGrade[grade].OrderBy(student => student) :
-            Enumerable.Empty<string>();
+        studentsByGrade.ContainsKey(grade)
+            ? studentsByGrade[grade].OrderBy(student => student)
+            : Enumerable.Empty<string>();
 }
