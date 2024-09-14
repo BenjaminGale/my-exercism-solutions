@@ -1,6 +1,6 @@
 
 pub fn reverse(input: &str) -> String {
-    let chars: Vec<char> = input.chars().collect();
+    let chars = input.chars().collect::<Vec<_>>();
     let mut reversed = vec![' '; chars.len()];
     
     for (i, c) in chars.iter().enumerate() {
