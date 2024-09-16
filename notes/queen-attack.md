@@ -33,4 +33,4 @@ Care needs to be taken when the piece makes a diagonal move that produces values
  - Move (4, 5) down and to the right by one square = (3, 6)
  - The difference between these squares is (3 - 4 = **-1**, 6 - 5 = **1**)
 
-Each piece has moved by the same **amount** but the **direction** is different. To solve this we can take the absolute values of the differences between the rows and columns as we are only interested **amount** moved.
+Each piece has moved by the same **amount** but the **direction** is different. To solve this we can take the absolute values of the differences between the rows and columns as we are only interested in the **amount** moved.
