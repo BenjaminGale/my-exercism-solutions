@@ -5,9 +5,8 @@ pub fn is_valid(code: &str) -> bool {
     
     code
         .chars()
-        .filter(|c| c.is_ascii_digit())
+        .filter_map(|c| c.to_digit(10))
         .rev()
-        .map(|c| c.to_digit(10).unwrap())
         .zip([1, 2].into_iter().cycle())
         .map(|(digit, multiplier)| digit * multiplier)
         .map(|product| if product > 9 { product - 9 } else { product })
