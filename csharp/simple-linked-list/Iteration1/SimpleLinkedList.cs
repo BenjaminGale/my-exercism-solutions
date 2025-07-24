@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+public class SimpleLinkedList<T> : IEnumerable<T>
+{
+    private T _value;
+    private SimpleLinkedList<T> _next;
+
+    public SimpleLinkedList(T value)
+    {
+        _value = value;
+    }
+
+    public SimpleLinkedList(IEnumerable<T> values)
+    {
+        _value = values.First();
+        var list = this;
+
+        foreach (var val in values.Skip(1))
+        {
+            list.Add(val);
+            list = list.Next;
+        }
+    }
+
+    public T Value => _value;
+
+    public SimpleLinkedList<T> Next => _next;
+
+    public SimpleLinkedList<T> Add(T value)
+    {
+        _next = new SimpleLinkedList<T>(value);
+        return this;
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        var list = this;
+
+        while (list != null)
+        {
+            yield return list.Value;
+            list = list.Next;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
