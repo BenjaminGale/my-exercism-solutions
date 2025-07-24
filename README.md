@@ -1,2 +1,5 @@
-# my-exercism-solutions
-My solutions to the programming exercises at exercism
+# My Exercism Solutions
+
+This repository contains the code I have written for the exercises available at exercism.org.
+
+[My Exercism Profile](https://exercism.org/profiles/BenjaminGale)
